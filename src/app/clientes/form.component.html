@@ -1,0 +1,94 @@
+<div class="card bg-dark text-white my-4">
+  <div class="card-header">{{ titulo }} para cliente {{ idCliente }}</div>
+  <div class="card-body">
+
+    <form>
+      <div class="form-group row">
+        <label for="nombre" class="col-form-label col-sm-2">Nombre</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-disabled" name="nombre" [(ngModel)]="cliente.nombre" readonly>
+          <input type="hidden" name="id" [(ngModel)]="cliente.id">
+        </div>
+      </div>
+
+      <div class="form-group row my-2">
+        <label for="correoElectronico" class="col-form-label col-sm-2">Correo Electrónico</label>
+        <div class="col-sm-6">
+          <input type="email" class="form-control" name="correoElectronico" [(ngModel)]="cliente.correoElectronico" readonly>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="direccionEnvio" class="col-form-label col-sm-2">Dirección de Envío</label>
+        <div class="col-sm-6">
+          <textarea class="form-control" name="direccionEnvio" [(ngModel)]="orden.direccionEnvio" cols="30" rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="form-group row my-4">
+        <label for="" class="col-form-label col-sm-2">Productos por Cliente</label>
+        <div class="col-sm-6">
+          <ng-autocomplete
+            [data]="data"
+            [searchKeyword]="keyword"
+            (selected)='selectEvent($event)'
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate"
+            placeholder="Escriba un nombre de un producto">
+          </ng-autocomplete>
+
+          <ng-template #itemTemplate let-item>
+          <a [innerHTML]="['Codigo: ' + item.id, item.nombre, 'Precio: ' + item.precio]"></a>
+          </ng-template>
+
+          <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="from-group row">
+        <div class="col-sm-6">
+          <button class="btn btn-primary" role="button" (click)="crearOrden()" [ngClass]="{'disabled': (orden.detallesOrden.length == 0)}">Crear Orden</button>
+        </div>
+      </div>
+    </form>
+
+    <p class="text-end" style="font-size: 20pt;" *ngIf="orden.total > 0">
+      <b>Total: </b><span class="badge bg-success">{{ orden.total }}</span>
+    </p>
+
+    <div class="alert alert-danger my-4" role="alert" *ngIf="orden.detallesOrden.length == 0">
+      <h4 class="alert-heading">No hay productos!</h4>
+      <p>Por favor, agrega productos.</p>
+      <hr>
+      <p class="mb-0">Para agregar un producto, has clic en el cuadro de busqueda de "productos cliente" o escriba el nombre del producto...</p>
+    </div>
+
+    <table class="table table-bordered text-white my-4" *ngIf="orden.detallesOrden.length > 0">
+      <thead>
+        <tr>
+          <th>Nombre del Producto</th>
+          <th>Cantidad</th>
+          <th>Precio</th>
+          <th>SubTotal</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of orden.detallesOrden" class="text-white">
+          <td>{{ item.producto.nombre }}</td>
+          <td>
+            <input type="number" min="1" max="5" class="form-control" [value]="item.cantidad" (change)="modificarCantidad(item.producto, $event.target.value)">
+          </td>
+          <td>{{ item.precio }}</td>
+          <td>{{ roundNumber(item.cantidad * item.producto.precio) }}</td>
+          <td>
+            <a class="btn btn-sm btn-danger" (click)="eliminarProducto(item.producto)">Eliminar</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="card my-4">
+  <div class="card-header">
+    Clientes
+  </div>
+  <div class="card-body">
+    <h5>Listado de Clientes</h5>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Correo Electrónico</th>
+          <th class="text-center">Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of clientes">
+          <td>{{ cliente.id }}</td>
+          <td>{{ cliente.nombre }}</td>
+          <td>{{ cliente.correoElectronico }}</td>
+          <td class="text-center">
+            <a class="btn btn-success btn-sm mx-1" [routerLink] = "['/clientes/form', cliente.id]">Crear Orden</a>
+            <a class="btn btn-primary btn-sm mx-1" [routerLink] = "['/ordenes', cliente.id]">Ordenes</a>
+            <a class="btn btn-secondary btn-sm mx-1" [routerLink] = "['/ordenes-mes', cliente.id]">Ordenes del Mes</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>

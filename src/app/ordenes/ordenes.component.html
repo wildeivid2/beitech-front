@@ -1,0 +1,79 @@
+<div class="card my-4">
+  <div class="card-header">
+    Clientes
+  </div>
+  <div class="card-body">
+    <h5>Listado de Ordenes del Cliente {{ cliente.nombre }}</h5>
+
+    <table class="table table-bordered table-striped my-8">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha de la Orden</th>
+          <th>Dirección de Envío</th>
+          <th>Total</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let orden of ordenes">
+          <td>{{ orden.id }}</td>
+          <td>{{ orden.fechaCreacion }}</td>
+          <td>{{ orden.direccionEnvio }}</td>
+          <td>{{ orden.total}}</td>
+          <td>
+            <a class="btn btn-sm btn-primary" (click)="verDetalleOrden(orden.id)">Ver Detalle</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+<ng-template #myModalInfo let-modal>
+
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Detalle de la Orden {{ orden.id }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+      <div class="alert alert-danger my-4" role="alert" *ngIf="orden.detallesOrden.length == 0">
+        <h4 class="alert-heading">No hay productos!</h4>
+        <p>Por favor, agrega productos.</p>
+        <hr>
+        <p class="mb-0">Para agregar un producto, has clic en el cuadro de busqueda de "productos cliente" o escriba el nombre del producto...</p>
+      </div>
+
+      <p class="text-end" style="font-size: 20pt;" *ngIf="orden.total > 0">
+        <b>Total: </b><span class="badge bg-success">{{ orden.total }}</span>
+      </p>
+
+      <table class="table table-bordered table-striped my-4" *ngIf="orden.detallesOrden.length > 0">
+        <thead>
+          <tr>
+            <th>Nombre del Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>SubTotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let orden of orden.detallesOrden">
+            <td>{{ orden.producto.nombre }}</td>
+            <td>{{ orden.cantidad }}</td>
+            <td>{{ orden.precio }}</td>
+            <td>{{ roundNumber(orden.cantidad * orden.producto.precio) }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+</ng-template>
